@@ -10,8 +10,6 @@ class App:
 
         self.password_set = False
         self.key = None
-        self.password_file = None
-        self.password_dict = {}
 
         self.check_password()
 
@@ -93,9 +91,11 @@ class App:
         f = Fernet(self.key)
         return f.decrypt(encrypted_password.encode()).decode()
 
-    passwords = {}
-
     def add_password(self):
+        self.key = self.generate_key()
+
+        with open("key.key", "wb") as key_file:
+            key_file.write(self.key)
 
         service = self.service_entry.get()
         username = self.username_entry.get()
@@ -103,20 +103,30 @@ class App:
 
         if service and username and password:
             encrypted_password = self.encrypt_password(password)
-            self.passwords[service] = {'username': username, 'password': encrypted_password}
+            enc_pwd = encrypted_password
+            with open("password.txt", "a") as pwd_txt:
+                pwd_txt.write(service + " | " + username + " | " + str(enc_pwd) + "\n")
+
             messagebox.showinfo("Success", "Password added successfully!")
         else:
             messagebox.showwarning("Error", "Please fill in all the fields.")
 
     def get_password(self):
-        self.service = self.service_entry.get()
-        if self.service in self.passwords:
-            encrypted_password = self.passwords[self.service]['password']
-            decrypted_password = self.decrypt_password(encrypted_password)
-            messagebox.showinfo("Password", f"Username: {self.passwords[self.service]['username']}\nPassword: {decrypted_password}")
-        else:
-            messagebox.showwarning("Error", "Password not found.")
+        service = self.service_entry.get()
+        with open("key.key", "rb") as key_file:
+            self.key = key_file.read()
 
+        with open("password.txt", "r") as get_pwd:
+            key = Fernet(self.key)
+            for line in get_pwd.readlines():
+                data = line.rstrip()
+                acc, usrn, pwd = data.split("|")
+
+                decrypted_password = self.decrypt_password(pwd)
+                if service == acc:
+                    messagebox.showinfo("Password", f"Username: {usrn}\nPassword: {decrypted_password}")
+                else:
+                    messagebox.showwarning("Error", "Password not found.")
 
     def check_password(self):
         try:
@@ -163,8 +173,8 @@ class App:
     def save_password(self):
         self.key = self.generate_master_key()
 
-        with open("master_key.key", "wb") as key_file:
-            key_file.write(self.key)
+        with open("master_key.key", "wb") as master_key_file:
+            master_key_file.write(self.key)
 
         password = self.password_entry_setup.get()
         encrypted_password = self.encrypt_master_password(password)

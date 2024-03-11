@@ -48,6 +48,18 @@ class App:
         self.main_label = ctk.CTkLabel(self.main_frame, text="Password Manager")
         self.main_label.pack(pady=12, padx=10)
 
+        self.website = ctk.CTkEntry(self.main_frame, placeholder_text="Website Name")
+        self.website.pack(pady=12, padx=10)
+
+        self.password = ctk.CTkEntry(self.main_frame, placeholder_text="Password", show="•")
+        self.password.pack(pady=12, padx=10)
+
+        self.add_button = ctk.CTkButton(self.main_frame, text="Add", command=self.add_password)
+        self.add_button.pack(pady=12, padx=10)
+
+        self.view_button = ctk.CTkButton(self.main_frame, text="View", command=self.view_websites)
+        self.view_button.pack(pady=12, padx=10)
+
         self.show_frame(self.register_frame)
 
         if os.path.exists('user_data.json') and os.path.getsize('user_data.json') != 0:
@@ -83,6 +95,12 @@ class App:
     def register(self):
         username = self.register_username.get()
         master_password = self.register_master_password.get()
+
+        if username == '' or master_password == '':
+            CTkMessagebox(title="Error", message="Please enter both username and master password")
+        elif username == master_password:
+            CTkMessagebox(title="Error", message="Username and master password cannot be the same")
+
         hashed_master_password = self.hash_password(master_password)
         user_data = {'username': username, 'master_password': hashed_master_password}
         file_name = 'user_data.json'
@@ -97,6 +115,17 @@ class App:
                 CTkMessagebox(title="Info", message="Registration complete!!")
                 self.show_frame(self.login_frame)
 
+        key_filename = 'encryption_key.key'
+        if os.path.exists(key_filename):
+            with open(key_filename, 'rb') as key_file:
+                key = key_file.read()
+        else:
+            key = self.generate_key()
+            with open(key_filename, 'wb') as key_file:
+                key_file.write(key)
+
+        self.cipher = self.initialize_cipher(key)
+
     def login(self):
         username = self.login_username.get()
         entered_password = self.login_master_password.get()
@@ -107,12 +136,12 @@ class App:
             stored_password_hash = user_data.get('master_password')
             entered_password_hash = self.hash_password(entered_password)
             if entered_password_hash == stored_password_hash and username == user_data.get('username'):
-                CTkMessagebox(title="Info", message="Login successful!!")
+                CTkMessagebox(title="Success", icon="check", message="Login successful!!")
                 self.show_frame(self.main_frame)
             else:
-                CTkMessagebox(title="Info", message="Invalid Login Credentials!")
+                CTkMessagebox(title="Error", icon="cancel", message="Invalid Login Credentials!")
         except Exception:
-            CTkMessagebox(title="Error", message="You have not registerd. Please Do That!")
+            CTkMessagebox(title="Error",icon="cancel", message="You have not registerd. Please Do That!")
 
     def view_websites(self):
         try:
@@ -125,18 +154,9 @@ class App:
         except FileNotFoundError:
             print("\n[-] You have not saved any passwords!\n")
 
-        key_filename = 'encryption_key.key'
-        if os.path.exists(key_filename):
-            with open(key_filename, 'rb') as key_file:
-                key = key_file.read()
-        else:
-            key = self.generate_key()
-            with open(key_filename, 'wb') as key_file:
-                key_file.write(key)
-
-        self.cipher = self.initialize_cipher(key)
-
-    def add_password(self, website, password):
+    def add_password(self):
+        website = self.website.get()
+        password = self.password.get()
         if not os.path.exists('passwords.json'):
             data = []
         else:
@@ -152,6 +172,8 @@ class App:
 
         with open('passwords.json', 'w') as file:
             json.dump(data, file, indent=4)
+
+        CTkMessagebox(title="Success", icon="check", message="Password Added Successfully!!")
 
     def get_password(self, website):
         if not os.path.exists('passwords.json'):

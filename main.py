@@ -115,17 +115,6 @@ class App:
                 CTkMessagebox(title="Info", message="Registration complete!!")
                 self.show_frame(self.login_frame)
 
-        key_filename = 'encryption_key.key'
-        if os.path.exists(key_filename):
-            with open(key_filename, 'rb') as key_file:
-                key = key_file.read()
-        else:
-            key = self.generate_key()
-            with open(key_filename, 'wb') as key_file:
-                key_file.write(key)
-
-        self.cipher = self.initialize_cipher(key)
-
     def login(self):
         username = self.login_username.get()
         entered_password = self.login_master_password.get()
@@ -142,6 +131,18 @@ class App:
                 CTkMessagebox(title="Error", icon="cancel", message="Invalid Login Credentials!")
         except Exception:
             CTkMessagebox(title="Error",icon="cancel", message="You have not registerd. Please Do That!")
+
+        key_filename = 'encryption_key.key'
+        if os.path.exists(key_filename):
+            with open(key_filename, 'rb') as key_file:
+                key = key_file.read()
+        else:
+            key = self.generate_key()
+            with open(key_filename, 'wb') as key_file:
+                key_file.write(key)
+
+        self.cipher = self.initialize_cipher(key)
+
 
     def view_websites(self):
         try:

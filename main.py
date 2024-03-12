@@ -190,6 +190,8 @@ class App:
         except json.JSONDecodeError:
             data = []
 
+        password_found = False
+
         for entry in data:
             if entry['website'] == website:
                 decrypted_password = self.decrypt_password(self.cipher, entry['password'])

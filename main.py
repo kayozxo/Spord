@@ -100,7 +100,8 @@ class App:
 
         if username == '' or master_password == '':
             CTkMessagebox(title="Error", message="Please enter both username and master password")
-        elif username == master_password:
+
+        if username == master_password:
             CTkMessagebox(title="Error", message="Username and master password cannot be the same")
 
         hashed_master_password = self.hash_password(master_password)
@@ -193,10 +194,11 @@ class App:
             if entry['website'] == website:
                 decrypted_password = self.decrypt_password(self.cipher, entry['password'])
                 CTkMessagebox(title="Password", message=f"Password For {website} : {decrypted_password}")
+                password_found = True
                 break
-            else:
-                CTkMessagebox(title="Error", icon="cancel", message="Password Not Found!")
-                break
+
+        if not password_found:
+            CTkMessagebox(title="Error", icon="cancel", message="Password Not Found!")
 
 if __name__ == "__main__":
     root = ctk.CTk()

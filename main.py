@@ -9,41 +9,38 @@ class App:
         self.root = root
         self.root.geometry("800x500")
         self.root.title("Password Manager")
-
+        self.root.configure(background='black')
         self.root.resizable(False, False)
 
-        self.register_frame = ctk.CTkFrame(self.root, width=800, height=500, corner_radius=0)
-        self.register_frame.pack()
+        self.register_frame = ctk.CTkFrame(root, width=800, height=500)
 
-        self.register_label = ctk.CTkLabel(self.register_frame, text="Register", font=("Roboto", 24))
-        self.register_label.pack(pady=12, padx=10)
+        self.register_label = ctk.CTkLabel(self.register_frame, text="Register", font=("Montserrat Black", 24))
+        self.register_label.place(x=400, y=50, anchor="center")
 
-        self.register_username = ctk.CTkEntry(self.register_frame, placeholder_text="Username")
-        self.register_username.pack(pady=12, padx=10)
+        self.register_username = ctk.CTkEntry(self.register_frame, placeholder_text="Username", width=250, height=40, font=("Montserrat", 12), corner_radius=5)
+        self.register_username.place(x=400, y=140, anchor="center")
 
-        self.register_master_password = ctk.CTkEntry(self.register_frame, placeholder_text="Master Password", show="•")
-        self.register_master_password.pack(pady=12, padx=10)
+        self.register_master_password = ctk.CTkEntry(self.register_frame, placeholder_text="Master Password", show="•", width=250, height=40, corner_radius=5, font=("Montserrat", 12))
+        self.register_master_password.place(x=400, y=190, anchor="center")
 
-        self.register_button = ctk.CTkButton(self.register_frame, text="Register", command=self.register)
-        self.register_button.pack(pady=12, padx=10)
+        self.register_button = ctk.CTkButton(self.register_frame, text="Register", command=self.register, font=("Montserrat Medium", 12), corner_radius=5, width=250, height=34)
+        self.register_button.place(x=400, y=260, anchor="center")
 
-        self.login_frame = ctk.CTkFrame(self.root, width=400, height=500, corner_radius=0)
-        self.login_frame.pack(side="left", fill="both", expand=True)
+        self.login_frame = ctk.CTkFrame(root, width=800, height=500)
 
-        self.login_label = ctk.CTkLabel(self.login_frame, text="Login", font=("Roboto", 24))
-        self.login_label.pack(pady=12, padx=10)
+        self.login_label = ctk.CTkLabel(self.login_frame, text="Login", font=("Montserrat Black", 24))
+        self.login_label.place(x=400, y=50, anchor="center")
 
-        self.login_username = ctk.CTkEntry(self.login_frame, placeholder_text="Username")
-        self.login_username.pack(pady=12, padx=10)
+        self.login_username = ctk.CTkEntry(self.login_frame, placeholder_text="Username", font=("Montserrat", 12), width=250, height=40, corner_radius=5)
+        self.login_username.place(x=400, y=140, anchor="center")
 
-        self.login_master_password = ctk.CTkEntry(self.login_frame, placeholder_text="Master Password", show="•")
-        self.login_master_password.pack(pady=12, padx=10)
+        self.login_master_password = ctk.CTkEntry(self.login_frame, placeholder_text="Master Password", show="•", font=("Montserrat", 12), width=250, height=40, corner_radius=5)
+        self.login_master_password.place(x=400, y=190, anchor="center")
 
-        self.login_button = ctk.CTkButton(self.login_frame, text="Login", command=self.login)
-        self.login_button.pack(pady=12, padx=10)
+        self.login_button = ctk.CTkButton(self.login_frame, text="Login", command=self.login, font=("Montserrat Medium", 12), corner_radius=5, width=250, height=34)
+        self.login_button.place(x=400, y=260, anchor="center")
 
-        self.main_frame = ctk.CTkFrame(self.root, width=400, height=500, corner_radius=0)
-        self.main_frame.pack(side="top", fill="both", expand=True)
+        self.main_frame = ctk.CTkFrame(root, width=800, height=500)
 
         self.main_label = ctk.CTkLabel(self.main_frame, text="Password Manager")
         self.main_label.pack(pady=12, padx=10)
@@ -69,6 +66,7 @@ class App:
             self.show_frame(self.login_frame)
         else:
             self.show_frame(self.register_frame)
+
 
     def hash_password(self, password):
         sha256 = hashlib.sha256()

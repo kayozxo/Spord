@@ -46,25 +46,25 @@ class App:
         self.main_label.place(x=400, y=50, anchor="center")
 
         self.website = ctk.CTkEntry(self.main_frame, placeholder_text="Website Name", font=("Montserrat", 12), width=250, height=40, corner_radius=5)
-        self.website.place(x=400, y=140, anchor="center")
+        self.website.place(x=400, y=120, anchor="center")
 
         self.password = ctk.CTkEntry(self.main_frame, placeholder_text="Enter Password", show="•", font=("Montserrat", 12), width=250, height=40, corner_radius=5)
-        self.password.place(x=400, y=190, anchor="center")
+        self.password.place(x=400, y=170, anchor="center")
 
         self.add_button = ctk.CTkButton(self.main_frame, text="Add Password", command=self.add_password, font=("Montserrat Medium", 12), corner_radius=5, width=250, height=34)
-        self.add_button.place(x=400, y=260, anchor="center")
+        self.add_button.place(x=400, y=240, anchor="center")
 
         self.view_button = ctk.CTkButton(self.main_frame, text="View Websites", command=self.view_websites, font=("Montserrat Medium", 12), corner_radius=5, width=250, height=34)
-        self.view_button.place(x=400, y=320, anchor="center")
+        self.view_button.place(x=400, y=300, anchor="center")
 
         self.get_password_button = ctk.CTkButton(self.main_frame, text="Get Password", command=self.get_password, font=("Montserrat Medium", 12), corner_radius=5, width=250, height=34)
-        self.get_password_button.place(x=400, y=380, anchor="center")
+        self.get_password_button.place(x=400, y=360, anchor="center")
 
         self.how_label = ctk.CTkLabel(self.main_frame, text="To get a password, enter the website name and then click on 'Get Password' button", font=("Montserrat Light", 10))
         self.how_label.place(x=400, y=480, anchor="center")
 
         self.logout_button = ctk.CTkButton(self.main_frame, text="Logout", command=self.logout, font=("Montserrat Medium", 12), corner_radius=5, width=250, height=34)
-        self.logout_button.place(x=400, y=440, anchor="center")
+        self.logout_button.place(x=400, y=420, anchor="center")
 
         self.show_frame(self.register_frame)
 
@@ -104,23 +104,22 @@ class App:
 
         if username == '' or master_password == '':
             CTkMessagebox(master=self.register_frame,title="Error",icon="warning.png", message="Please enter both username and master password", font=("Montserrat Medium", 12), icon_size=(40, 40))
-
-        if username == master_password:
+        elif username == master_password:
             CTkMessagebox(master=self.register_frame,title="Error",icon="warning.png", message="Username and master password cannot be the same", font=("Montserrat Medium", 12), icon_size=(40, 40))
-
-        hashed_master_password = self.hash_password(master_password)
-        user_data = {'username': username, 'master_password': hashed_master_password}
-        file_name = 'user_data.json'
-        if os.path.exists(file_name) and os.path.getsize(file_name) == 0:
-            with open(file_name, 'w') as file:
-                json.dump(user_data, file)
-                CTkMessagebox(master=self.register_frame,title="Success",icon="check.png", message="Registration complete!!", font=("Montserrat Medium", 12), icon_size=(40, 40))
-                self.show_frame(self.login_frame)
         else:
-            with open(file_name, 'x') as file:
-                json.dump(user_data, file)
-                CTkMessagebox(master=self.register_frame,title="Success",icon="check.png", message="Registration complete!!", font=("Montserrat Medium", 12), icon_size=(40, 40))
-                self.show_frame(self.login_frame)
+            hashed_master_password = self.hash_password(master_password)
+            user_data = {'username': username, 'master_password': hashed_master_password}
+            file_name = 'user_data.json'
+            if os.path.exists(file_name) and os.path.getsize(file_name) == 0:
+                with open(file_name, 'w') as file:
+                    json.dump(user_data, file)
+                    CTkMessagebox(master=self.register_frame,title="Success",icon="check.png", message="Registration complete!!", font=("Montserrat Medium", 12), icon_size=(40, 40))
+                    self.show_frame(self.login_frame)
+            else:
+                with open(file_name, 'x') as file:
+                    json.dump(user_data, file)
+                    CTkMessagebox(master=self.register_frame,title="Success",icon="check.png", message="Registration complete!!", font=("Montserrat Medium", 12), icon_size=(40, 40))
+                    self.show_frame(self.login_frame)
 
     def login(self):
         username = self.login_username.get()
@@ -133,6 +132,8 @@ class App:
             entered_password_hash = self.hash_password(entered_password)
             if entered_password_hash == stored_password_hash and username == user_data.get('username'):
                 CTkMessagebox(master=self.login_frame, title="Success", icon="check.png", message="Login successful!!", font=("Montserrat Medium", 12), corner_radius=10, icon_size=(40, 40))
+                self.website.delete(0, 'end')
+                self.password.delete(0, 'end')
                 self.show_frame(self.main_frame)
             else:
                 CTkMessagebox(master=self.login_frame,title="Error", icon="error.png", message="Invalid Login Credentials!", font=("Montserrat Medium", 12), icon_size=(40, 40))

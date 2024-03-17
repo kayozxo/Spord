@@ -24,6 +24,12 @@ Spord relies on the following Python modules:
 - `customtkinter`: Provides a custom Tkinter GUI toolkit
 - `CTkMessagebox`: A modern message box alternative for custom Tkinter
 
+You can install them using:
+
+```bash
+pip install customtkinter CTkMessagebox cryptography
+```
+
 ## Installation and Setup
 
 1. Clone the Spord repository from GitHub:

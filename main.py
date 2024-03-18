@@ -1,6 +1,5 @@
-import json, hashlib, getpass, os, sys
+import json, hashlib, os
 from cryptography.fernet import Fernet
-import tkinter as tk
 import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
 

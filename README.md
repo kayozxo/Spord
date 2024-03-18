@@ -2,6 +2,17 @@
 
 Spord is an open-source password manager application built with Python and the custom Tkinter module. It provides a simple and user-friendly interface for securely storing and retrieving passwords for various websites.
 
+## Screenshots
+
+<div  align="center">
+<div>
+<img  src="screenshots/register.png"  width="45%" />
+<img  src="screenshots/login1.png"  width="45%" />
+<img  src="screenshots/login2.png"  width="45%" />
+<img  src="screenshots/main.png"  width="45%" />
+</div>
+</div>
+
 ## Overview
 
 Spord allows users to register and log in with a unique username and password. Once logged in, users can add new passwords, view saved website names, and retrieve passwords for specific websites. The app supports multiple frames for an enhanced user experience. On subsequent launches, Spord will automatically detect the encrypted master password file and display the login screen. If the file is not found, the registration screen will be shown.
